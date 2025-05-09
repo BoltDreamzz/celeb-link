@@ -25,7 +25,10 @@ SECRET_KEY = 'django-insecure-_m_agd^#6d_d%$e$_4=9d8$cdt%uo#a9bjuiv54io@ht*5)1rp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["celeb-link.onrender.com", "127.0.0.1"]
+CSRF_TRUSTED_ORIGINS = [
+    'https://celeb-link.onrender.com',
+ ]
 
 
 # Application definition
