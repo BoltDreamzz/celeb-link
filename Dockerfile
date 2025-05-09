@@ -2,10 +2,10 @@
 FROM python:3.13
 
 # Set the working directory to /app
-WORKDIR /celebrity
+WORKDIR /celebsite
 
 # Copy the current directory contents into the container at /app
-COPY . /celebrity
+COPY . /celebsite
 
 RUN pip install --upgrade pip
 
@@ -18,7 +18,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE 8000
 
 # Define environment variable/ change to app
-ENV DJANGO_SETTINGS_MODULE=celebrity.settings
+ENV DJANGO_SETTINGS_MODULE=celebsite.settings
 
 # Run app.py when the container launches
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
