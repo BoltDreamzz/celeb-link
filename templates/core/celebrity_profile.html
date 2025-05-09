@@ -1,0 +1,536 @@
+<!-- core/templates/core/celebrity_profile.html -->
+{% extends 'partials/base.html' %}
+{% block title %}{{ celebrity.name }}{% endblock %}
+{% block content %}
+
+<style>
+    @keyframes float {
+        0% {
+            transform: translateY(0px);
+        }
+
+        50% {
+            transform: translateY(-20px);
+        }
+
+        100% {
+            transform: translateY(0px);
+        }
+    }
+
+    @keyframes pulse-slow {
+
+        0%,
+        100% {
+            opacity: 0.8;
+        }
+
+        50% {
+            opacity: 1;
+        }
+    }
+
+    @keyframes shimmer {
+        0% {
+            background-position: -1000px 0;
+        }
+
+        100% {
+            background-position: 1000px 0;
+        }
+    }
+
+    .animate-float {
+        animation: float 6s ease-in-out infinite;
+    }
+
+    .animate-pulse-slow {
+        animation: pulse-slow 4s ease-in-out infinite;
+    }
+
+    .animate-shimmer {
+        background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.2) 50%, rgba(255, 255, 255, 0) 100%);
+        background-size: 1000px 100%;
+        animation: shimmer 3s infinite;
+    }
+
+    .text-shadow {
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .text-shadow-lg {
+        text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .font-montserrat {
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .font-playfair {
+        font-family: 'Playfair Display', serif;
+    }
+
+    .clip-path-slant {
+        clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+    }
+
+    .clip-path-slant-reverse {
+        clip-path: polygon(0 0, 100% 15%, 100% 100%, 0 100%);
+    }
+
+    .bg-noise {
+        background-image: url("{{celebrity.hero_image.url}}");
+        background-blend-mode: overlay;
+    }
+</style>
+
+
+<section id="home" class="relative h-screen flex items-center justify-center overflow-hidden">
+    <!-- Background Video/Image with Overlay -->
+    <div class="absolute inset-0 z-0">
+        <!-- <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('/placeholder.svg?height=1080&width=1920');"></div> -->
+        <!-- <div class="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-black/50"></div> -->
+        <div
+            class="absolute inset-0 bg-[radial-gradient(circle_at_center,_rgba(236,72,153,0.3)_0%,_rgba(0,0,0,0)_70%)]">
+        </div>
+        <div class="absolute inset-0 bg-noise opacity-10"></div>
+    </div>
+
+    <!-- Floating Elements -->
+    <div class="absolute top-1/4 left-1/4 w-32 h-32 rounded-full bg-celebrity-500/20 blur-3xl animate-float"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-40 h-40 rounded-full bg-purple-500/20 blur-3xl animate-float"
+        style="animation-delay: 2s;"></div>
+
+    <!-- Hero Content -->
+    <div class="relative z-10 text-center px-6 max-w-5xl mx-auto">
+        <h1
+            class="font-playfair text-6xl md:text-8xl lg:text-9xl font-bold mb-6 text-white text-shadow-lg tracking-tight">
+            <span class="block">{{ celebrity.name }}</span>
+            <span
+                class="text-2xl md:text-3xl uppercase tracking-[0.3em] font-montserrat font-light text-celebrity-300 mt-2">World
+                Tour 2025</span>
+        </h1>
+
+        <p class="text-xl md:text-2xl italic text-white/90 mb-10 max-w-2xl mx-auto text-shadow">
+            "Music is the universal language that transcends all boundaries and connects souls across the world."
+        </p>
+
+        <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-6">
+            <a href="#membership"
+                class="group relative overflow-hidden rounded-full py-4 px-10 text-lg transition duration-300 transform hover:scale-105 hover:shadow-[0_0_20px_rgba(236,72,153,0.6)] btn btn-xl bg-[#D8AB58]">
+                <span class="relative z-10">Join the Fan Club</span>
+                <span
+                    class="absolute inset-0 w-full h-full bg-gradient-to-r from-celebrity-500 to-celebrity-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                <span class="absolute inset-0 w-full h-full animate-shimmer"></span>
+            </a>
+
+            <!-- <a href="#tour" class="group relative overflow-hidden rounded-full bg-transparent border-2 border-white/50 text-white font-bold py-4 px-10 text-lg transition duration-300 transform hover:scale-105 hover:border-white hover:shadow-[0_0_20px_rgba(255,255,255,0.3)]">
+                <span class="relative z-10">Tour Dates</span>
+                <span class="absolute inset-0 w-full h-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+            </a> -->
+        </div>
+    </div>
+    
+    
+
+    <!-- Scroll Indicator -->
+
+</section>
+<br>
+<button class="toast-trigger" data-message="This is a toast!">Show Toast</button>
+
+<!-- Example: multiple buttons -->
+<button class="toast-trigger" data-message="Saved successfully!">Save</button>
+<button class="toast-trigger" data-message="Item added to cart!">Add to Cart</button>
+
+<br>
+    <div class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 py-4">
+                <div class="text-center p-4">
+                    <p class="text-2xl font-bold text-[#D8AB58]">{{celebrity.followers}}</p>
+                    <p class="text-gray-600">Followers</p>
+                </div>
+                <div class="text-center p-4">
+                    <p class="text-2xl font-bold text-[#D8AB58]">{{celebrity.projects}}</p>
+                    <p class="text-gray-600">Projects</p>
+                </div>
+                <div class="text-center p-4">
+                    <p class="text-2xl font-bold text-[#D8AB58]">{{celebrity.awards}}</p>
+                    <p class="text-gray-600">Awards</p>
+                </div>
+                <div class="text-center p-4">
+                    <p class="text-2xl font-bold text-[#D8AB58]">{{celebrity.years_active}}</p>
+                    <p class="text-gray-600">Years Active</p>
+                </div>
+            </div>
+        </div>
+    </div>
+<br>
+<br>
+<div class="text-center mb-12 relative">
+    <div class="absolute -top-8 right-0 text-dark bg-[#D8AB58] text-xs font-medium px-3 py-1 rounded-full shadow-md">
+        {{celebrity.name}}'s World
+    </div>
+    <h1 class="text-5xl font-bold text-white text-shadow">Support {{celebrity.name}}</h1>
+</div>
+
+<!-- Cards Container -->
+<div class="flex flex-col md:flex-row gap-6 max-w-5xl w-full justify-center">
+    
+
+    
+
+    <!-- Music Card -->
+    <div class="bg-white rounded-3xl overflow-hidden w-full md:w-72 card-shadow">
+        <div class="relative">
+            <img src="{{ celebrity.hero_image.url }}"
+                alt="Concert performance" class="w-full h-48 object-cover">
+            <div class="absolute top-3 left-3 flex items-center gap-2">
+                <div class="bg-blue-500 rounded-full w-8 h-8 flex items-center justify-center overflow-hidden">
+                    <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/2769f73101f9b605703c05f21ebbd0fa.jpg-E21PwdK7zmMD8XLIWKRBCDIP5rbAoS.jpeg"
+                        alt="Profile" class="w-full h-full object-cover">
+                </div>
+                <div>
+                    <p class="text-white font-medium text-sm">Lofi Beats</p>
+                    <p class="text-white text-xs opacity-80">@lofibeats</p>
+                </div>
+            </div>
+            <div class="absolute top-3 right-3">
+                <div class="bg-white bg-opacity-20 backdrop-blur-sm rounded-full p-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20"
+                        fill="currentColor">
+                        <path fill-rule="evenodd"
+                            d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z"
+                            clip-rule="evenodd" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        <div class="p-4">
+            <button
+                class="flex items-center justify-center gap-2 w-full border border-gray-200 rounded-full py-2 mb-2 hover:bg-gray-50 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                <span class="text-sm font-medium">Add to playlist</span>
+            </button>
+            <button
+                class="flex items-center justify-center w-full bg-black text-white rounded-full py-2 hover:bg-gray-800 transition-colors">
+                <span class="text-sm font-medium">Share Track</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+<!-- Main Content -->
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <h2 class="text-2xl font-bold mb-8 text-center">Current & Upcoming Shows</h2>
+
+    
+    <!-- Shows Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+        <!-- Current Show Card -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Show" class="w-full h-48 object-cover">
+                <div class="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Now Showing
+                </div>
+            </div>
+            <div class="p-6">
+                <h3 class="text-xl font-bold mb-2">The Crown - Season 5</h3>
+                <p class="text-gray-600 mb-4">Royal Drama Series • Netflix</p>
+                <div class="flex items-center mb-4">
+                    <div class="flex text-yellow-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path
+                                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                    </div>
+                    <span class="text-gray-600 ml-2">9.2/10</span>
+                </div>
+                <button
+                    class="w-full bg-primary text-white py-3 rounded-lg font-medium hover:bg-primary/90 transition">Watch
+                    Now</button>
+            </div>
+        </div>
+
+        <!-- Upcoming Show Card -->
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
+            <div class="relative">
+                <img src="https://images.unsplash.com/photo-1478720568477-152d9b164e26?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80"
+                    alt="Show" class="w-full h-48 object-cover">
+                <div class="absolute top-4 left-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-medium">
+                    Coming Soon
+                </div>
+                <div class="absolute bottom-4 left-4 font-bold text-3xl text-white">
+                    The Oscars Highlights
+                </div>
+            </div>
+            
+        </div>
+
+        <!-- Upcoming Show Card -->
+        
+    </div>
+
+    <!-- Membership & Support Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-16">
+        <!-- Membership Card -->
+        <div class="bg-[#f7b801] rounded-xl shadow-lg overflow-hidden text-dark">
+            <div class="p-8">
+                <div class="flex items-center mb-6">
+                    <div class="bg-white/20 p-3 rounded-lg mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold">VIP Membership</h3>
+                        <p class="opacity-80">Exclusive access & benefits</p>
+                    </div>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Early access to show tickets</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Exclusive behind-the-scenes content</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Monthly virtual meet & greets</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Personalized birthday message</span>
+                    </li>
+                </ul>
+                <div class="flex items-baseline mb-6">
+                    <span class="text-3xl font-bold">$9.99</span>
+                    <span class="ml-2 opacity-80">per month</span>
+                </div>
+                <button
+                    class="w-full bg-white text-indigo-700 py-3 rounded-lg font-medium hover:bg-gray-100 transition">Claim
+                    Membership</button>
+            </div>
+        </div>
+
+        <!-- Fan Card -->
+        <div class="bg-[#386641] rounded-xl shadow-lg overflow-hidden text-white">
+            <div class="p-8">
+                <div class="flex items-center mb-6">
+                    <div class="bg-white/20 p-3 rounded-lg mr-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold">Official Fan Card</h3>
+                        <p class="opacity-80">Join the official fan club</p>
+                    </div>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Digital collectible fan card</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Exclusive fan community access</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Fan-only merchandise discounts</span>
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 flex-shrink-0" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        <span>Priority fan mail delivery</span>
+                    </li>
+                </ul>
+                <div class="flex items-baseline mb-6">
+                    <span class="text-3xl font-bold">$24.99</span>
+                    <span class="ml-2 opacity-80">one-time purchase</span>
+                </div>
+                <button
+                    class="w-full bg-white text-rose-600 py-3 rounded-lg font-medium hover:bg-gray-100 transition">Get
+                    Fan Card</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Support Options -->
+    <div class="bg-white rounded-xl shadow-md overflow-hidden p-8 mb-16">
+        <h3 class="text-2xl font-bold mb-6 text-center">Support Options</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+                class="text-center p-6 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition">
+                <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold mb-2">Fan Mail</h4>
+                <p class="text-gray-600 mb-4">Send a personal message to {{celebrity.name}}</p>
+                <button data-message="Claim Membership" class="text-primary toast-trigger font-medium hover:text-primary/80 transition">Write a Letter</button>
+            </div>
+            <div
+                class="text-center p-6 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition">
+                <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold mb-2">Charity Support</h4>
+                <p class="text-gray-600 mb-4">Support {{celebrity.name}}'s favorite causes</p>
+                <button class="text-primary font-medium hover:text-primary/80 transition">Donate Now</button>
+            </div>
+            <div
+                class="text-center p-6 border border-gray-200 rounded-lg hover:border-primary hover:shadow-md transition">
+                <div class="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-primary" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                    </svg>
+                </div>
+                <h4 class="text-lg font-semibold mb-2">Official Merch</h4>
+                <p class="text-gray-600 mb-4">Exclusive merchandise collection</p>
+                <button class="text-primary font-medium hover:text-primary/80 transition">Shop Now</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <h2 class="text-2xl font-bold mb-8 text-center">Gallery</h2>
+    
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
+        {%for m in celebrity.media.all%}
+        <div class="relative overflow-hidden rounded-lg group">
+            <img src="{{ media.url }}"
+                alt="{{media.caption}}" class="w-full h-64 object-cover transition duration-300 group-hover:scale-110">
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                <p class="text-white font-medium">Award Ceremony 2023</p>
+            </div>
+        </div>
+        {%endfor%}
+        <div class="relative overflow-hidden rounded-lg group">
+            <img src="https://images.unsplash.com/photo-1560177112-fbfd5fde9566?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Gallery Image" class="w-full h-64 object-cover transition duration-300 group-hover:scale-110">
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                <p class="text-white font-medium">On Set - The Crown</p>
+            </div>
+        </div>
+        <div class="relative overflow-hidden rounded-lg group">
+            <img src="https://images.unsplash.com/photo-1533923156502-be31530547c4?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Gallery Image" class="w-full h-64 object-cover transition duration-300 group-hover:scale-110">
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                <p class="text-white font-medium">Charity Gala 2023</p>
+            </div>
+        </div>
+        <div class="relative overflow-hidden rounded-lg group">
+            <img src="https://images.unsplash.com/photo-1556155092-490a1ba16284?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80"
+                alt="Gallery Image" class="w-full h-64 object-cover transition duration-300 group-hover:scale-110">
+            <div
+                class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition flex items-end p-4">
+                <p class="text-white font-medium">Press Conference</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      document.querySelectorAll(".toast-trigger").forEach(button => {
+        button.addEventListener("click", function () {
+          const message = this.getAttribute("data-message") || "Default toast message";
+  
+          Toastify({
+            text: message,
+            duration: 3000,
+            close: true,
+            gravity: "bottom", // top or bottom
+            position: "center", // left, center, or right
+            backgroundColor: "#D8AB58", // custom background
+            stopOnFocus: true, // prevents dismiss on hover
+          }).showToast();
+        });
+      });
+    });
+  </script>
+  
+
+{% endblock %}
