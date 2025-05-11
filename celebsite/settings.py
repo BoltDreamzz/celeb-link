@@ -146,3 +146,7 @@ EMAIL_HOST_PASSWORD = 'fcbpidyjoxvrkgno'
 
 # Add your KorrectBoost API key
 KORRECTBOOST_API_KEY = 'e40e1e54734a4ac1076a3c67174cdf8f'
+
+# settings.py
+PAYSTACK_SECRET_KEY = 'sk_live_fc3fe89312663726b3ef2a3ef062ba22edc3708e'
+PAYSTACK_PUBLIC_KEY = 'pk_live_d0f0fac7a98439f0e5a35a43ab0367a1da03a198'

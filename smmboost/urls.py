@@ -12,4 +12,7 @@ urlpatterns = [
     path('place-order/', views.place_order, name='place_order'),
     path('orders/', views.order_list, name='order_list'),
     path('check-status/<int:order_id>/', views.check_status, name='check_status'),
+    path('wallet/top-up/', views.wallet_top_up, name='wallet_top_up'),
+    path('paystack/initialize/', views.initialize_payment, name='initialize_payment'),
+    path('verify-payment/', views.verify_payment, name='verify_payment'),
 ]

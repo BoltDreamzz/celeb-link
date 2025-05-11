@@ -1,7 +1,7 @@
 import requests
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
-from .models import Service, Order
+from .models import Service, Order, WalletTransaction
 from .forms import OrderForm
 
 
@@ -30,6 +30,7 @@ def service_list(request):
 
 
 def place_order(request):
+    wallet = Wallet.objects.get(user=request.user)
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
@@ -122,11 +123,20 @@ def service_detail(request, service_id):
     if request.method == 'POST':
         link = request.POST.get('link')
         quantity = int(request.POST.get('quantity'))
+        wallet = Wallet.objects.get(user=request.user)
+        charge = quantity * service.rate
+
+
 
         # Validate quantity
         if quantity < service.min_quantity or quantity > service.max_quantity:
             messages.error(request, f"Quantity must be between {service.min_quantity} and {service.max_quantity}")
             return redirect('smmboost:service_detail', service_id=service_id)
+        
+        if wallet.balance < charge:
+            messages.error(request, "Insufficient funds. Please top up your wallet.")
+            return redirect('smmboost:wallet_top_up')
+
 
         # Prepare the request payload
         payload = {
@@ -144,6 +154,9 @@ def service_detail(request, service_id):
             if 'order' in result:
                 api_order_id = result['order']
                 charge = (service.rate * quantity) / 1000
+
+                wallet.balance -= charge
+                wallet.save()
 
                 # Save order in DB
                 Order.objects.create(
@@ -167,3 +180,89 @@ def service_detail(request, service_id):
             return redirect('smmboost:service_detail', service_id=service_id)
 
     return render(request, 'smmboost/service_detail.html', {'service': service, 'orders': orders})
+
+
+from .forms import WalletTopUpForm
+from .models import Wallet
+from django.contrib.auth.decorators import login_required
+
+
+@login_required
+def wallet_top_up(request):
+    wallet = Wallet.objects.get(user=request.user)
+    if request.method == 'POST':
+        form = WalletTopUpForm(request.POST)
+        if form.is_valid():
+            amount = form.cleaned_data['amount']
+            wallet.balance += amount
+            wallet.save()
+            messages.success(request, f'Top-up successful! New balance: ${wallet.balance:.2f}')
+            return redirect('smmboost:wallet_top_up')
+    else:
+        form = WalletTopUpForm()
+
+    return render(request, 'smmboost/wallet_top_up.html', {'form': form, 'wallet': wallet})
+
+
+# views.py
+import requests
+from django.conf import settings
+from django.utils.crypto import get_random_string
+
+@login_required
+def initialize_payment(request):
+    if request.method == 'POST':
+        amount = float(request.POST.get('amount'))  # Get amount from user
+        ref = get_random_string(length=12).upper()
+        headers = {
+            "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}",
+            "Content-Type": "application/json",
+        }
+        data = {
+            "email": request.user.email,
+            "amount": int(amount * 100),  # Paystack expects amount in kobo
+            "reference": ref,
+            "callback_url": request.build_absolute_uri('/verify-payment/')
+        }
+
+        response = requests.post('https://api.paystack.co/transaction/initialize', headers=headers, json=data)
+        res_data = response.json()
+
+        if res_data.get('status'):
+            # Save transaction
+            wallet = Wallet.objects.get(user=request.user)
+            WalletTransaction.objects.create(wallet=wallet, amount=amount, reference=ref)
+            return redirect(res_data['data']['authorization_url'])
+        else:
+            messages.error(request, "Unable to initialize payment. Try again.")
+            return redirect('smmboost:wallet_top_up')
+
+
+
+# views.py
+@login_required
+def verify_payment(request):
+    ref = request.GET.get('reference')
+    headers = {
+        "Authorization": f"Bearer {settings.PAYSTACK_SECRET_KEY}"
+    }
+    url = f"https://api.paystack.co/transaction/verify/{ref}"
+    response = requests.get(url, headers=headers)
+    res_data = response.json()
+
+    if res_data['status'] and res_data['data']['status'] == 'success':
+        try:
+            tx = WalletTransaction.objects.get(reference=ref, verified=False)
+            tx.verified = True
+            tx.save()
+
+            # Credit user wallet
+            tx.wallet.balance += tx.amount
+            tx.wallet.save()
+
+            messages.success(request, f"Payment successful! Wallet credited with ₦{tx.amount}")
+        except WalletTransaction.DoesNotExist:
+            messages.warning(request, "Transaction already verified or not found.")
+    else:
+        messages.error(request, "Payment verification failed.")
+    return redirect('smmboost:wallet_top_up')
