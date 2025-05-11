@@ -1,0 +1,20 @@
+{% extends "smmboost/base.html" %}
+{% block content %}
+<h3>My Orders</h3>
+<table class="table table-striped">
+  <tr>
+    <th>Order ID</th><th>Service</th><th>Status</th><th>Link</th><th>Qty</th><th>Charge</th><th>Check</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    <td>{{ order.api_order_id }}</td>
+    <td>{{ order.service.name }}</td>
+    <td>{{ order.status }}</td>
+    <td><a href="{{ order.link }}" target="_blank">Link</a></td>
+    <td>{{ order.quantity }}</td>
+    <td>{{ order.charge }}</td>
+    <td><a href="{% url 'check_status' order.id %}">Check</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

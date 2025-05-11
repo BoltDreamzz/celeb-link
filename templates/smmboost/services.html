@@ -1,0 +1,56 @@
+{% extends "smmboost/base.html" %}
+{% block content %}
+<h3>Available Services</h3>
+<table class="table table-bordered">
+  <tr>
+    <th>Name</th>
+    <th>Category</th>
+    <th>Rate</th>
+    <th>Min</th>
+    <th>Max</th>
+  </tr>
+  {% for service in services %}
+  <tr>
+    <td>{{ service.name }}</td>
+    <td>{{ service.category }}</td>
+    <td>{{ service.rate }}</td>
+    <td>{{ service.min_quantity }}</td>
+    <td>{{ service.max_quantity }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+
+<section class="bg-white rounded-xl shadow-md p-6 mb-8">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+        <i class="fas fa-list-ul text-primary-600 mr-2"></i> Available Services
+    </h2>
+    
+    <div class="overflow-x-auto">
+        <table class="min-w-full bg-white rounded-lg overflow-hidden">
+            <thead class="bg-primary-700 text-white">
+                <tr>
+                    <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Category</th>
+                    <th class="py-3 px-4 text-left">Rate</th>
+                    <th class="py-3 px-4 text-left">Min</th>
+                    <th class="py-3 px-4 text-left">Max</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200">
+                {% for service in services %}
+                <!-- Sample data - would be replaced by template loop -->
+                <tr class="hover:bg-gray-50 transition">
+                    <td class="py-3 px-4">{{ service.name }}</td>
+                    <td class="py-3 px-4"><span class="bg-pink-100 text-pink-800 text-xs font-medium px-2.5 py-0.5 rounded">{{ service.category }}</span></td>
+                    <td class="py-3 px-4">{{ service.rate }}</td>
+                    <td class="py-3 px-4">{{ service.min_quantity }}</td>
+                    <td class="py-3 px-4">{{ service.max_quantity }}</td>
+                </tr>
+                {%endfor%}
+                
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

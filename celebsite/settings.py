@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'core',
+    'smmboost'
 ]
 
 MIDDLEWARE = [
@@ -142,3 +143,6 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'myluxuryhomes80@gmail.com'
 EMAIL_HOST_PASSWORD = 'fcbpidyjoxvrkgno'
+
+# Add your KorrectBoost API key
+KORRECTBOOST_API_KEY = 'e40e1e54734a4ac1076a3c67174cdf8f'
