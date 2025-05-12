@@ -13,7 +13,7 @@ def fetch_services(request):
         'key': settings.KORRECTBOOST_API_KEY,
         'action': 'services'
     })
-    services = response.json()[:30]
+    services = response.json()[:50]
     Service.objects.all().delete()
     for s in services:
         Service.objects.create(
@@ -28,8 +28,10 @@ def fetch_services(request):
 
 
 def service_list(request):
-    services = Service.objects.all()[:30]
-    return render(request, 'smmboost/services_list.html', {'services': services})
+    services = Service.objects.all()[:50]
+    
+    count = services.count()
+    return render(request, 'smmboost/services_list.html', {'services': services, 'count': count})
 
 
 @login_required
@@ -47,7 +49,7 @@ def place_order(request):
             # Check balance before proceeding
             if wallet.balance < charge:
                 messages.error(request, f"Insufficient funds. You need ₦{charge:.2f} but you have ₦{wallet.balance:.2f}.")
-                return redirect('smmboost:wallet_top_up')
+                return redirect('smmboost:services')
 
             # Prepare API data
             data = {
