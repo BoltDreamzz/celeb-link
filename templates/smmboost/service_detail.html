@@ -1,5 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
+{% load humanize %}
 {%load form_tags%}
 {% block content %}
 <div class="container mx-auto">
@@ -45,7 +46,7 @@
                     </div>
                 </div>
                 <div class="flex items-center text-neutral">
-                    <span class="text-3xl font-bold mr-2 text-neutral">#{{service.rate}}</span>
+                    <span class="text-3xl font-bold mr-2 text-neutral">₦ {{service.rate|intcomma}}</span>
                     <span class="text-neutral/70">per 100 followers</span>
                 </div>
             </div>
@@ -71,28 +72,34 @@
     setTimeout(() => showToast = false, 4000)
   })
 ">
-        <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Wallet</h2>
-            <p class="mb-4 text-gray-700">Current Balance: <strong>${{ user_balance }}</strong></p>
+        <div class="stats flex items-center shadow-lg bg-base-100 border-green-300 border">
+            <div class="stat w-full">
+                <div class="stat-title">Account balance</div>
+                <div class="stat-value">₦ {{ user_balance|intcomma }}</div>
+                <div class="stat-actions ">
+                    <form method="post" action="{% url 'smmboost:initialize_payment' %}" class="space-y-4 flex flex-col">
+                        {% csrf_token %}
+                        <input type="number" name="amount" min="1" step="0.01" placeholder="8000"
+                            class="w-full border rounded-lg p-2">
+                        <button class="btn bg-green-300">Add funds</button>
 
-            <form method="post" action="{% url 'smmboost:initialize_payment' %}" class="space-y-4">
-                {% csrf_token %}
-                <input type="number" name="amount" min="1" step="0.01" placeholder="8000"
-                    class="w-full border rounded-lg p-2">
-                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
-                    Pay with Paystack
-                </button>
-            </form>
+                    </form>
+                </div>
+            </div>
+
 
         </div>
+        
 
+        <br>
+        <hr>
         <br>
         <h2 class="text-2xl font-bold mb-6 text-gray-800">Place an Order</h2>
 
         <form method="post" @submit="loading = true" id="order-form">
             {% csrf_token %}
 
-           
+
             <div class="mb-4">
                 <label for="id_link" class="block mb-1 font-semibold text-gray-700">Link</label>
                 {{ form.link }}
