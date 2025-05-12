@@ -1,0 +1,37 @@
+{% extends "smmboost/base.html" %}
+{% block content %}
+{% load static %}
+{%load form_tags%}
+
+<h2 class="font-bold text-3xl mb-4"> Available services</h1>
+<br>
+<div class="overflow-x-auto w-full flex flex-col items-center">
+    <table class="table w-full table-xs table-pin-rows table-pin-cols">
+      <!-- head -->
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Rate</th>
+          <th>Min</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- row 1 -->
+        {% for service in services %}
+        <tr>
+          <th>{{service.name|first_words}}</th>
+          <td>{{service.category|first_words}}</td>
+          <td>{{service.rate}}</td>
+          <td><a href="{%url 'smmboost:service_detail' service.id%}" class="btn btn-circle">-></a></td>
+        </tr>
+        {% endfor %}
+        <!-- row 2 -->
+        
+      </tbody>
+    </table>
+  </div>
+<div class="container">
+    
+</div>
+{% endblock %}

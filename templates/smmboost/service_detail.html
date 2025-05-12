@@ -1,18 +1,64 @@
 {% extends 'smmboost/base.html' %}
 {% load static %}
-
+{%load form_tags%}
 {% block content %}
+<div class="container mx-auto">
+    <section class="bg-gradient-to-br from-instagram-900 to-instagram-500 rounded-xl shadow-xl overflow-hidden mb-8 text-white">
+        <div class="flex flex-col md:flex-row">
+            <div class="md:w-3/5 p-8 md:p-12">
+                <span class="inline-block bg-red-500 backdrop-blur-sm text-white px-3 py-1 rounded-full text-sm font-medium mb-4">
+                    {{service.category|first_words}}
+                </span>
+                <h1 class="text-3xl md:text-4xl text-neutral font-bold mb-4">{{ service.name }}</h1>
+                <div class="flex items-center mb-6">
+                    <div class="flex items-center mr-6 text-neutral">
+                        <i class="fas fa-star text-yellow-300 mr-1"></i>
+                        <span class="font-medium">4.9</span>
+                        <span class="text-white/70 ml-1">(2,384 reviews)</span>
+                    </div>
+                    <div class="flex items-center text-neutral">
+                        <i class="fas fa-users text-neutral mr-1"></i>
+                        <span>10,000+ orders completed</span>
+                    </div>
+                </div>
+                <p class="text-lg mb-8 text-neutral/90">Boost your {{service.category|first_words}} presence with high-quality, {{service.category}}. <br><br> Enhance your credibility and attract organic growth with our premium follower packages.</p>
+                <div class="flex flex-wrap gap-4 mb-6">
+                    <div class="bg-neutral/10 text-neutral backdrop-blur-sm rounded-lg px-4 py-3 flex items-center">
+                        <i class="fas fa-bolt text-yellow-300 mr-2"></i>
+                        <span>Fast Delivery</span>
+                    </div>
+                    <div class="bg-neutral/10 text-neutral backdrop-blur-sm rounded-lg px-4 py-3 flex items-center">
+                        <i class="fas fa-shield-alt text-green-300 mr-2"></i>
+                        <span>Safe & Secure</span>
+                    </div>
+                    <div class="bg-neutral/10 text-neutral backdrop-blur-sm rounded-lg px-4 py-3 flex items-center">
+                        <i class="fas fa-redo text-blue-300 mr-2"></i>
+                        <span>30-Day Refill</span>
+                    </div>
+                    <div class="bg-neutral/10 text-neutral backdrop-blur-sm rounded-lg px-4 py-3 flex items-center">
+                        <i class="fas fa-headset text-purple-300 mr-2"></i>
+                        <span>24/7 Support</span>
+                    </div>
+                </div>
+                <div class="flex items-center text-neutral">
+                    <span class="text-3xl font-bold mr-2 text-neutral">#{{service.rate}}</span>
+                    <span class="text-neutral/70">per 100 followers</span>
+                </div>
+            </div>
+            
+        </div>
+    </section>
+</div>
+
+
 <div class="container mt-5">
     {% for message in messages %}
     <div class="alert alert-{{ message.tags }}">{{ message }}</div>
     {% endfor %}
 
-    <h2>{{ service.name }}</h2>
-    <p><strong>Category:</strong> {{ service.category }}</p>
-    <p><strong>Rate:</strong> ${{ service.rate }} per 1000</p>
-    <p><strong>Min:</strong> {{ service.min_quantity }} | Max: {{ service.max_quantity }}</p>
+    
 
-    <div x-data="{ loading: false, showToast: false, toastMessage: '', toastType: 'success' }"
+    <div id="#order-section" x-data="{ loading: false, showToast: false, toastMessage: '', toastType: 'success' }"
         class="max-w-xl mx-auto mt-10 bg-white p-6 rounded-xl shadow-lg" x-init="
   window.addEventListener('order:feedback', event => {
     toastMessage = event.detail.message

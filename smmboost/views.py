@@ -1,8 +1,11 @@
 import requests
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from .models import Service, Order, WalletTransaction
 from .forms import OrderForm
+
+
 
 
 def fetch_services(request):
@@ -21,22 +24,32 @@ def fetch_services(request):
             min_quantity=s['min'],
             max_quantity=s['max']
         )
-    return redirect('smmboost:services')
+    return redirect('smmboost:services_list')
 
 
 def service_list(request):
-    services = Service.objects.all()
-    return render(request, 'smmboost/services.html', {'services': services})
+    services = Service.objects.all()[:30]
+    return render(request, 'smmboost/services_list.html', {'services': services})
 
 
+@login_required
 def place_order(request):
     wallet = Wallet.objects.get(user=request.user)
+
     if request.method == 'POST':
         form = OrderForm(request.POST)
         if form.is_valid():
             service = form.cleaned_data['service']
             link = form.cleaned_data['link']
             quantity = form.cleaned_data['quantity']
+            charge = (service.rate * quantity) / 1000
+
+            # Check balance before proceeding
+            if wallet.balance < charge:
+                messages.error(request, f"Insufficient funds. You need ₦{charge:.2f} but you have ₦{wallet.balance:.2f}.")
+                return redirect('smmboost:wallet_top_up')
+
+            # Prepare API data
             data = {
                 'key': settings.KORRECTBOOST_API_KEY,
                 'action': 'add',
@@ -44,10 +57,17 @@ def place_order(request):
                 'link': link,
                 'quantity': quantity
             }
+
+            # Send API request
             response = requests.post('https://korrectboost.com/api/v2', data=data)
             result = response.json()
+
             if 'order' in result:
-                charge = (service.rate * quantity) / 1000
+                # Deduct from wallet
+                wallet.balance -= charge
+                wallet.save()
+
+                # Save order
                 Order.objects.create(
                     api_order_id=result['order'],
                     service=service,
@@ -56,13 +76,16 @@ def place_order(request):
                     charge=charge,
                     status='Pending'
                 )
+
+                messages.success(request, "Order placed successfully!")
                 return redirect('smmboost:order_list')
             else:
-                return render(request, 'smmboost/place_order.html', {'form': form, 'error': result.get('error', 'Unknown error')})
+                # API error — show message but don’t deduct
+                messages.error(request, f"Failed to place order: {result.get('error', 'Unknown error')}")
     else:
         form = OrderForm()
-    return render(request, 'smmboost/place_order.html', {'form': form})
 
+    return render(request, 'smmboost/place_order.html', {'form': form})
 
 def order_list(request):
     orders = Order.objects.order_by('-created_at')
@@ -112,13 +135,14 @@ import requests
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib import messages
 from .models import Service, Order
+from .forms import OrderForm
 
 API_KEY = 'e40e1e54734a4ac1076a3c67174cdf8f'  # Replace with your real key
 
 def service_detail(request, service_id):
-    orders = Order.objects.filter(service=service)[:5]
+    # orders = Order.objects.filter(service=service)
 
-    service = get_object_or_404(Service, service_id=service_id)
+    service = get_object_or_404(Service, id=service_id)
 
     if request.method == 'POST':
         link = request.POST.get('link')
@@ -179,7 +203,7 @@ def service_detail(request, service_id):
             messages.error(request, "Something went wrong. Please try again.")
             return redirect('smmboost:service_detail', service_id=service_id)
 
-    return render(request, 'smmboost/service_detail.html', {'service': service, 'orders': orders})
+    return render(request, 'smmboost/service_detail.html', {'service': service, 'form': OrderForm()})
 
 
 from .forms import WalletTopUpForm

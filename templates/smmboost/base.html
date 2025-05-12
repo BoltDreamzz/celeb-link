@@ -22,6 +22,36 @@
     <link href="https://cdn.jsdelivr.net/npm/daisyui@5/themes.css" rel="stylesheet" type="text/css" />
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            300: '#7dd3fc',
+                            400: '#38bdf8',
+                            500: '#0ea5e9',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                            900: '#0c4a6e',
+                        },
+                        instagram: {
+                            100: '#fee2e9',
+                            500: '#e1306c',
+                            900: '#833ab4',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
     <script>
         tailwind.config = {
             theme: {
@@ -46,7 +76,7 @@
     </script>
 </head>
 
-<body class="p-4">
+<!-- <body class="p-4"> -->
 
     <div class="navbar bg-base-100 shadow-sm">
         <div class="navbar-start">
@@ -90,23 +120,24 @@
             </button>
         </div>
     </div>
-    <div class="container flex flex-col items-center justify-center mx-auto mt-5">
-        <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Wallet Top-Up</h2>
-            <p class="mb-4 text-gray-700">Current Balance: <strong>${{ wallet.balance }}</strong></p>
+    <div class="max-w-xl mx-auto mt-10 p-6 bg-white rounded-xl shadow-lg">
+        <h2 class="text-xl font-bold mb-4">Wallet Top-Up</h2>
+        <p class="mb-4 text-gray-700">Current Balance: <strong>${{ user_balance }}</strong></p>
+      
+        <form method="post" action="{% url 'smmboost:initialize_payment' %}" class="space-y-4">
+            {% csrf_token %}
+            <input type="number" name="amount" min="1" step="0.01" placeholder="Enter amount"
+                   class="w-full border rounded-lg p-2">
+            <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
+              Pay with Paystack
+            </button>
+          </form>
           
-            <form method="post" action="{% url 'smmboost:initialize_payment' %}" class="space-y-4">
-                {% csrf_token %}
-                <input type="number" name="amount" min="1" step="0.01" placeholder="Enter amount"
-                       class="w-full border rounded-lg p-2">
-                <button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700">
-                  Pay with Paystack
-                </button>
-              </form>
-              
-          </div>
-          
-        <hr>
+      </div>
+      
+    <br>
+    <div class="container m-3 w-full flex flex-col items-center justify-center">
+        
         {% block content %}{% endblock %}
     </div>
     <!-- Loading Spinner -->
@@ -136,6 +167,6 @@
         }, true);
     </script>
 
-</body>
+
 
 </html>
