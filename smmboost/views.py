@@ -141,6 +141,8 @@ from .forms import OrderForm
 
 API_KEY = 'e40e1e54734a4ac1076a3c67174cdf8f'  # Replace with your real key
 
+
+@login_required
 def service_detail(request, service_id):
     # orders = Order.objects.filter(service=service)
 
