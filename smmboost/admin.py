@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Wallet, Service, Order, WalletTransaction,
+from .models import Wallet, Service, Order, WalletTransaction
 
 # Register your models here.
 admin.site.register(Service)
